@@ -1,0 +1,80 @@
+{
+  "app": {
+    "title": "Sugarcane Disease Detection",
+    "subtitle": "AI-Powered Disease Diagnosis"
+  },
+  "nav": {
+    "home": "Home",
+    "detection": "Detection",
+    "diseases": "Diseases",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "home": {
+    "welcome": "Welcome to Sugarcane Disease Detection",
+    "description": "Upload or capture sugarcane leaf/stem images to detect diseases using AI",
+    "getStarted": "Get Started",
+    "features": {
+      "title": "Features",
+      "instant": "Instant Detection",
+      "instantDesc": "Get results in seconds",
+      "offline": "Offline Capable",
+      "offlineDesc": "Works without internet",
+      "multilingual": "Multilingual",
+      "multilingualDesc": "Available in 4 languages",
+      "accurate": "96.4% Accurate",
+      "accurateDesc": "Powered by Claude AI"
+    }
+  },
+  "detection": {
+    "title": "Disease Detection",
+    "uploadTitle": "Upload Image",
+    "uploadDesc": "Drag & drop or click to upload",
+    "cameraTitle": "Camera Capture",
+    "cameraDesc": "Take photo with webcam",
+    "analyzing": "Analyzing image...",
+    "results": "Results",
+    "confidence": "Confidence",
+    "severity": "Severity",
+    "symptoms": "Symptoms",
+    "treatment": "Treatment",
+    "prevention": "Prevention",
+    "tryAnother": "Try Another Image",
+    "download": "Download Result",
+    "share": "Share",
+    "copyText": "Copy Text"
+  },
+  "diseases": {
+    "title": "Disease Information",
+    "redRot": "Red Rot",
+    "smut": "Smut",
+    "rust": "Rust",
+    "leafScald": "Leaf Scald",
+    "mosaicVirus": "Mosaic Virus",
+    "healthy": "Healthy"
+  },
+  "history": {
+    "title": "Prediction History",
+    "noHistory": "No predictions yet",
+    "clear": "Clear All",
+    "delete": "Delete"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "clearCache": "Clear Cache",
+    "about": "About",
+    "version": "Version 1.0.0"
+  },
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "upload": "Upload",
+    "capture": "Capture",
+    "loading": "Loading..."
+  }
+}

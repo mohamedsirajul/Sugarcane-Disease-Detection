@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check localStorage</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        pre { background: #f4f4f4; padding: 15px; overflow-x: auto; }
+        img { max-width: 200px; margin: 10px 0; }
+        .prediction { border: 1px solid #ddd; padding: 15px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>localStorage Predictions Data</h1>
+    <div id="output"></div>
+
+    <script>
+        const predictions = JSON.parse(localStorage.getItem('predictions') || '[]');
+        const output = document.getElementById('output');
+
+        if (predictions.length === 0) {
+            output.innerHTML = '<p>No predictions found in localStorage</p>';
+        } else {
+            output.innerHTML = `<p>Found ${predictions.length} predictions</p>`;
+
+            predictions.forEach((pred, index) => {
+                const div = document.createElement('div');
+                div.className = 'prediction';
+                div.innerHTML = `
+                    <h2>Prediction #${index + 1}</h2>
+                    <p><strong>Disease:</strong> ${pred.disease || 'N/A'}</p>
+                    <p><strong>Scientific Name:</strong> ${pred.scientific_name || 'N/A'}</p>
+                    <p><strong>Confidence:</strong> ${pred.confidence || 'N/A'}%</p>
+                    <p><strong>Category:</strong> ${pred.category || 'N/A'}</p>
+                    <p><strong>Severity:</strong> ${pred.severity || 'N/A'}</p>
+                    <p><strong>Affected Parts:</strong> ${pred.affected_parts ? pred.affected_parts.join(', ') : 'N/A'}</p>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>${pred.symptoms ? pred.symptoms.map(s => `<li>${s}</li>`).join('') : '<li>N/A</li>'}</ul>
+                    <p><strong>Treatment:</strong> ${pred.treatment || 'N/A'}</p>
+                    <p><strong>Prevention:</strong> ${pred.prevention || 'N/A'}</p>
+                    <p><strong>Timestamp:</strong> ${pred.timestamp || 'N/A'}</p>
+                    <p><strong>Has Image:</strong> ${pred.image ? 'Yes (' + pred.image.substring(0, 50) + '...)' : 'No'}</p>
+                    ${pred.image ? `<p><strong>Image:</strong><br><img src="${pred.image}" alt="Uploaded image"></p>` : ''}
+                    <details>
+                        <summary>Raw JSON</summary>
+                        <pre>${JSON.stringify(pred, null, 2)}</pre>
+                    </details>
+                `;
+                output.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>

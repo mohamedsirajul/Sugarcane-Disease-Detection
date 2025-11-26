@@ -1,0 +1,80 @@
+{
+  "app": {
+    "title": "गन्ना रोग का पता लगाना",
+    "subtitle": "AI संचालित रोग निदान"
+  },
+  "nav": {
+    "home": "होम",
+    "detection": "पहचान",
+    "diseases": "रोग",
+    "history": "इतिहास",
+    "settings": "सेटिंग्स"
+  },
+  "home": {
+    "welcome": "गन्ना रोग पहचान में आपका स्वागत है",
+    "description": "AI का उपयोग करके रोगों का पता लगाने के लिए गन्ने की पत्ती/तना छवियों को अपलोड या कैप्चर करें",
+    "getStarted": "शुरू करें",
+    "features": {
+      "title": "विशेषताएं",
+      "instant": "त्वरित पहचान",
+      "instantDesc": "सेकंड में परिणाम प्राप्त करें",
+      "offline": "ऑफ़लाइन सक्षम",
+      "offlineDesc": "इंटरनेट के बिना काम करता है",
+      "multilingual": "बहुभाषी",
+      "multilingualDesc": "4 भाषाओं में उपलब्ध",
+      "accurate": "96.4% सटीक",
+      "accurateDesc": "Claude AI द्वारा संचालित"
+    }
+  },
+  "detection": {
+    "title": "रोग का पता लगाना",
+    "uploadTitle": "छवि अपलोड करें",
+    "uploadDesc": "खींचें और छोड़ें या अपलोड करने के लिए क्लिक करें",
+    "cameraTitle": "कैमरा कैप्चर",
+    "cameraDesc": "वेबकैम से फोटो लें",
+    "analyzing": "छवि का विश्लेषण कर रहा है...",
+    "results": "परिणाम",
+    "confidence": "विश्वास",
+    "severity": "गंभीरता",
+    "symptoms": "लक्षण",
+    "treatment": "उपचार",
+    "prevention": "रोकथाम",
+    "tryAnother": "दूसरी छवि आज़माएं",
+    "download": "परिणाम डाउनलोड करें",
+    "share": "साझा करें",
+    "copyText": "पाठ कॉपी करें"
+  },
+  "diseases": {
+    "title": "रोग जानकारी",
+    "redRot": "लाल सड़ांध",
+    "smut": "काला रतुआ",
+    "rust": "रस्ट रोग",
+    "leafScald": "पत्ती झुलसा",
+    "mosaicVirus": "मोज़ेक वायरस",
+    "healthy": "स्वस्थ"
+  },
+  "history": {
+    "title": "भविष्यवाणी इतिहास",
+    "noHistory": "अभी तक कोई भविष्यवाणी नहीं",
+    "clear": "सभी साफ़ करें",
+    "delete": "हटाएं"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "language": "भाषा",
+    "theme": "थीम",
+    "light": "प्रकाश",
+    "dark": "अंधेरा",
+    "clearCache": "कैश साफ़ करें",
+    "about": "के बारे में",
+    "version": "संस्करण 1.0.0"
+  },
+  "common": {
+    "close": "बंद करें",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "upload": "अपलोड",
+    "capture": "कैप्चर",
+    "loading": "लोड हो रहा है..."
+  }
+}
