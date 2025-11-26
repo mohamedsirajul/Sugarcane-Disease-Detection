@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap, Wifi, Languages, Target } from 'lucide-react';
+import { ArrowRight, Zap, Languages, Target } from 'lucide-react';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -35,11 +35,6 @@ export default function Home() {
               icon={Zap}
               title={t('home.features.instant')}
               description={t('home.features.instantDesc')}
-            />
-            <FeatureCard
-              icon={Wifi}
-              title={t('home.features.offline')}
-              description={t('home.features.offlineDesc')}
             />
             <FeatureCard
               icon={Languages}
