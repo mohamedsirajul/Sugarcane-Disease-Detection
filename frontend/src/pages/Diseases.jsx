@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DiseaseCard from '../components/DiseaseCard';
 import { Loader2 } from 'lucide-react';
+import { apiRequest } from '../utils/api';
 
 export default function Diseases() {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ export default function Diseases() {
 
   const fetchDiseases = async () => {
     try {
-      const response = await fetch('/api/diseases');
+      const response = await apiRequest('/api/diseases');
       const data = await response.json();
       setDiseases(data.diseases);
     } catch (error) {

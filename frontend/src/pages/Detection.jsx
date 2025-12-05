@@ -4,6 +4,7 @@ import ImageUploader from '../components/ImageUploader';
 import CameraCapture from '../components/CameraCapture';
 import ResultCard from '../components/ResultCard';
 import { Loader2, RotateCcw, AlertCircle } from 'lucide-react';
+import { apiRequest } from '../utils/api';
 
 export default function Detection() {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ export default function Detection() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const response = await fetch('/api/predict', {
+      const response = await apiRequest('/api/predict', {
         method: 'POST',
         body: formData,
       });
