@@ -238,33 +238,19 @@ async def predict_disease(file: UploadFile = File(...)):
         # Initialize Claude client
         client = anthropic.Anthropic(api_key=api_key)
 
-        # Ultra-strict prompt - reject anything that's not real sugarcane
-        prompt = """Look at this image carefully.
+        # Simple, effective prompt
+        prompt = """You are a sugarcane disease expert. Analyze this image.
 
-STEP 1 - STRICT VALIDATION (MOST IMPORTANT):
-Does this image show a REAL, LIVING SUGARCANE PLANT in nature/field?
-- Must be actual plant, NOT: screenshots, websites, UI, graphics, text, drawings, diagrams, other crops
-- Must show green/yellow leaves OR jointed stems (like bamboo)
-- Must be outdoor/field photo of actual plant
+FIRST: Check if this is a REAL PHOTO of sugarcane plant (tall grass with blade leaves and jointed stems).
 
-If NO (if you see websites, UI, text, buttons, graphics, other plants, or anything digital/artificial):
-Return this EXACT JSON:
-{
-    "disease": "No Disease Detected",
-    "confidence": 0,
-    "category": "Invalid",
-    "severity": "None",
-    "symptoms": ["Image does not contain sugarcane plant", "No plant material visible for diagnosis"],
-    "affected_parts": ["None - Invalid Image"],
-    "treatment": "Upload a clear image of sugarcane leaves or stems",
-    "prevention": "Ensure image shows sugarcane plant clearly before uploading",
-    "scientific_name": "Not Applicable"
-}
+If you see computer UI, websites, screenshots, text, or non-plant objects → Return:
+{"disease": "No Disease Detected", "confidence": 0, "category": "Invalid", "severity": "None", "symptoms": ["Image does not contain sugarcane plant", "No plant material visible for diagnosis"], "affected_parts": ["None - Invalid Image"], "treatment": "Upload a clear image of sugarcane leaves or stems", "prevention": "Ensure image shows sugarcane plant clearly before uploading", "scientific_name": "Not Applicable"}
 
-STEP 2 - ONLY if confirmed REAL sugarcane plant:
-Diagnose disease and return JSON with disease name, symptoms, treatment.
+If REAL sugarcane present → Diagnose:
+- Check for disease symptoms: discoloration, lesions, spots, rot, wilting, fungal growth
+- Return JSON with: disease name (or "Healthy"), confidence %, symptoms list, affected parts, treatment, prevention, scientific name
 
-CRITICAL: When in doubt, say it's NOT sugarcane. Return ONLY JSON."""
+Return ONLY JSON, no explanation."""
 
         # Send request to Claude
         # Use Claude 3 Haiku - fast, efficient, and widely available
