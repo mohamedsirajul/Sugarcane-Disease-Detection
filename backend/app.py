@@ -238,9 +238,26 @@ async def predict_disease(file: UploadFile = File(...)):
         # Initialize Claude client
         client = anthropic.Anthropic(api_key=api_key)
 
-        # Improved prompt - removed bias and made more objective
-        prompt = """You are an expert plant pathologist specializing in sugarcane diseases. Carefully analyze this image and provide an accurate diagnosis.
+        # Improved prompt - handles both sugarcane and non-sugarcane images
+        prompt = """You are an expert plant pathologist specializing in sugarcane diseases. Analyze this image carefully.
 
+FIRST: Determine if this image contains sugarcane plant material (leaves, stems, or internodes).
+
+IF NOT SUGARCANE (e.g., screenshots, other plants, objects, people, etc.):
+Return JSON with:
+{
+    "disease": "Not a Sugarcane Image",
+    "confidence": 0,
+    "category": "Invalid",
+    "severity": "None",
+    "symptoms": ["This image does not appear to contain sugarcane plant material"],
+    "affected_parts": ["N/A"],
+    "treatment": "Please upload a clear image of sugarcane leaves or stems",
+    "prevention": "N/A",
+    "scientific_name": "N/A"
+}
+
+IF SUGARCANE IS PRESENT:
 ANALYSIS APPROACH:
 1. Examine visible symptoms: discoloration, lesions, spots, wilting, deformities, growth patterns
 2. Identify affected plant parts: leaves, stem, internodes, shoots, roots
@@ -255,9 +272,9 @@ Other: Pest damage, Nutritional deficiency, Environmental stress, Healthy
 
 RESPONSE FORMAT (JSON only, no markdown):
 {
-    "disease": "Disease name matching the most prominent symptoms",
+    "disease": "Disease name or 'Healthy' or 'Not a Sugarcane Image'",
     "confidence": 85,
-    "category": "Fungal/Bacterial/Viral/Pest/Nutritional/Environmental/None",
+    "category": "Fungal/Bacterial/Viral/Pest/Nutritional/Environmental/None/Invalid",
     "severity": "Very High/High/Medium/Low/None",
     "symptoms": ["specific observable symptom 1", "specific observable symptom 2", "specific observable symptom 3"],
     "affected_parts": ["specific plant part 1", "specific plant part 2"],
@@ -266,11 +283,11 @@ RESPONSE FORMAT (JSON only, no markdown):
     "scientific_name": "Scientific name if known"
 }
 
-IMPORTANT: Base diagnosis ONLY on clearly visible symptoms in the image. Be objective and precise."""
+IMPORTANT: Base diagnosis ONLY on clearly visible symptoms in the image. Be objective and precise. If unsure whether it's sugarcane, err on the side of saying it's not sugarcane."""
 
         # Send request to Claude
-        # Use Claude 3.5 Sonnet which is widely available and efficient
-        model_name = "claude-3-5-sonnet-20241022"
+        # Use Claude 3 Haiku - fast, efficient, and widely available
+        model_name = "claude-3-haiku-20240307"
 
         message = client.messages.create(
             model=model_name,
@@ -341,9 +358,14 @@ IMPORTANT: Base diagnosis ONLY on clearly visible symptoms in the image. Be obje
         }
 
     except anthropic.APIError as e:
+        print(f"Claude API Error: {e}")
         raise HTTPException(status_code=500, detail=f"Claude API error: {str(e)}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
+        print(f"General Error: {e}")
+        print(f"Error type: {type(e).__name__}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Error processing image: {type(e).__name__} - {str(e)}")
 
 
 if __name__ == "__main__":
