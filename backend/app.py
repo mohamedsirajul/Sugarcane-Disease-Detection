@@ -238,13 +238,10 @@ async def predict_disease(file: UploadFile = File(...)):
         # Initialize Claude client
         client = anthropic.Anthropic(api_key=api_key)
 
-        # Improved prompt - handles both sugarcane and non-sugarcane images
-        prompt = """You are an expert plant pathologist specializing in sugarcane diseases. Analyze this image carefully.
+        # Short, strict prompt for accurate detection
+        prompt = """Analyze this image. You MUST first verify it shows a REAL SUGARCANE PLANT (Saccharum officinarum).
 
-FIRST: Determine if this image contains sugarcane plant material (leaves, stems, or internodes).
-
-IF NOT SUGARCANE (e.g., screenshots, other plants, objects, people, etc.):
-Return JSON with:
+CRITICAL: If the image shows ANYTHING other than actual sugarcane plant material (screenshots, UI elements, other plants, text, graphics, objects, people), respond:
 {
     "disease": "No Disease Detected",
     "confidence": 0,
@@ -257,33 +254,12 @@ Return JSON with:
     "scientific_name": "Not Applicable"
 }
 
-IF SUGARCANE IS PRESENT:
-ANALYSIS APPROACH:
-1. Examine visible symptoms: discoloration, lesions, spots, wilting, deformities, growth patterns
-2. Identify affected plant parts: leaves, stem, internodes, shoots, roots
-3. Determine disease severity based on symptom extent and damage
-4. Match observed symptoms to known sugarcane diseases
+ONLY if you see REAL SUGARCANE (tall grass-like plant with bamboo-like stems and long blade leaves):
+1. Look for disease symptoms: lesions, spots, discoloration, wilting, fungal growth
+2. Identify the disease from: Red Rot, Smut, Rust, Wilt, Leaf Scald, Mosaic Virus, or mark as Healthy
+3. Return JSON with exact disease name, visible symptoms, treatment, and prevention
 
-COMMON SUGARCANE DISEASES:
-Fungal: Red Rot (Colletotrichum falcatum), Smut (Sporisorium scitamineum), Rust (Puccinia melanocephala), Wilt (Fusarium sacchari), Pokkah Boeng (Fusarium moniliforme), Ring Spot, Eye Spot, Brown Spot, Yellow Leaf Spot, Sour Rot
-Bacterial: Leaf Scald (Xanthomonas albilineans), Ratoon Stunting Disease (Leifsonia xyli), Gumming Disease, Red Stripe
-Viral: Mosaic Virus (SCMV), Yellow Leaf Virus (SCYLV), Streak Mosaic, Fiji Leaf Gall
-Other: Pest damage, Nutritional deficiency, Environmental stress, Healthy
-
-RESPONSE FORMAT (JSON only, no markdown):
-{
-    "disease": "Exact disease name or 'Healthy' or 'Invalid Image'",
-    "confidence": 85,
-    "category": "Fungal/Bacterial/Viral/Pest/Nutritional/Environmental/None/Invalid",
-    "severity": "Very High/High/Medium/Low/None",
-    "symptoms": ["Clear, specific symptom 1 visible in image", "Clear, specific symptom 2 visible in image", "Clear, specific symptom 3 visible in image"],
-    "affected_parts": ["Leaves", "Stems", "Internodes", "Shoots", "Roots", or "Not Applicable"],
-    "treatment": "Specific, actionable treatment recommendation",
-    "prevention": "Specific, actionable prevention measures",
-    "scientific_name": "Scientific pathogen name or 'Not Applicable'"
-}
-
-IMPORTANT: Base diagnosis ONLY on clearly visible symptoms in the image. Be objective and precise. If unsure whether it's sugarcane, err on the side of saying it's not sugarcane."""
+Return ONLY valid JSON, no extra text."""
 
         # Send request to Claude
         # Use Claude 3 Haiku - fast, efficient, and widely available
