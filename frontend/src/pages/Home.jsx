@@ -30,7 +30,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
             {t('home.features.title')}
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <FeatureCard
               icon={Zap}
               title={t('home.features.instant')}
@@ -79,10 +79,14 @@ export default function Home() {
 
 function FeatureCard({ icon: Icon, title, description }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
-      <Icon className="w-12 h-12 text-primary mb-4" />
-      <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{title}</h3>
-      <p className="text-gray-600 dark:text-gray-400">{description}</p>
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+      <div className="flex flex-col items-center text-center">
+        <div className="bg-primary/10 dark:bg-primary/20 rounded-full p-4 mb-4">
+          <Icon className="w-10 h-10 text-primary" />
+        </div>
+        <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">{title}</h3>
+        <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
+      </div>
     </div>
   );
 }

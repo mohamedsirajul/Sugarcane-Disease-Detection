@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Sugarcane Disease Detection",
-    "subtitle": "AI-Powered Disease Diagnosis"
+    "subtitle": "Advanced Disease Diagnosis"
   },
   "nav": {
     "home": "Home",
@@ -12,7 +12,7 @@
   },
   "home": {
     "welcome": "Welcome to Sugarcane Disease Detection",
-    "description": "Upload or capture sugarcane leaf/stem images to detect diseases using AI",
+    "description": "Upload or capture sugarcane leaf/stem images to detect diseases instantly",
     "getStarted": "Get Started",
     "features": {
       "title": "Features",
@@ -23,7 +23,7 @@
       "multilingual": "Multilingual",
       "multilingualDesc": "Available in 4 languages",
       "accurate": "96.4% Accurate",
-      "accurateDesc": "Powered by Claude AI"
+      "accurateDesc": "Powered by advanced technology"
     }
   },
   "detection": {

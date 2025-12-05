@@ -269,8 +269,8 @@ RESPONSE FORMAT (JSON only, no markdown):
 IMPORTANT: Base diagnosis ONLY on clearly visible symptoms in the image. Be objective and precise."""
 
         # Send request to Claude
-        # Use Claude 3 Opus which should be available for all API keys
-        model_name = "claude-3-opus-20240229"
+        # Use Claude 3.5 Sonnet which is widely available and efficient
+        model_name = "claude-3-5-sonnet-20241022"
 
         message = client.messages.create(
             model=model_name,
