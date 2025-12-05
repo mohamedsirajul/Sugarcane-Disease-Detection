@@ -316,20 +316,42 @@ IMPORTANT: Base diagnosis ONLY on clearly visible symptoms in the image. Be obje
 
         # Parse response
         response_text = message.content[0].text.strip()
+        print(f"Raw response from Claude (length: {len(response_text)})")
 
-        # Try to extract JSON if wrapped in markdown
+        # Extract JSON from response - handle various formats
+        json_text = None
+
+        # Try markdown code blocks first
         if "```json" in response_text:
-            response_text = response_text.split("```json")[1].split("```")[0].strip()
+            json_text = response_text.split("```json")[1].split("```")[0].strip()
         elif "```" in response_text:
-            response_text = response_text.split("```")[1].split("```")[0].strip()
+            json_text = response_text.split("```")[1].split("```")[0].strip()
+
+        # If no markdown, look for JSON object by finding { and }
+        if not json_text or not json_text.strip():
+            # Find the first { and last } to extract JSON
+            start_idx = response_text.find('{')
+            end_idx = response_text.rfind('}')
+
+            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                json_text = response_text[start_idx:end_idx + 1]
+            else:
+                json_text = response_text
+
+        print(f"Extracted JSON (first 200 chars): {json_text[:200]}...")
 
         # Parse JSON
         try:
-            prediction = json.loads(response_text)
+            prediction = json.loads(json_text)
         except json.JSONDecodeError as e:
             print(f"JSON parsing error: {e}")
-            print(f"Response text: {response_text}")
-            raise HTTPException(status_code=500, detail=f"Failed to parse AI response: {str(e)}")
+            print(f"Failed JSON text: {json_text}")
+            # Return a user-friendly error instead of exception
+            return {
+                "success": False,
+                "error": "Unable to process the image. Please try again with a clear image of sugarcane.",
+                "detail": str(e)
+            }
 
         # Check if disease exists in our database and enrich with additional info
         disease_name = prediction.get("disease", "Unknown")
