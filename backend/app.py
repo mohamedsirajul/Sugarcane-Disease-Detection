@@ -238,19 +238,29 @@ async def predict_disease(file: UploadFile = File(...)):
         # Initialize Claude client
         client = anthropic.Anthropic(api_key=api_key)
 
-        # Simple, effective prompt
-        prompt = """You are a sugarcane disease expert. Analyze this image.
+        # Strict, quality-focused prompt
+        prompt = """You are a sugarcane disease expert. Analyze this image strictly.
 
-FIRST: Check if this is a REAL PHOTO of sugarcane plant (tall grass with blade leaves and jointed stems).
+VALIDATION (Check ALL):
+1. Is this a CLEAR photo of sugarcane plant ONLY (tall grass, blade leaves, bamboo-like stems)?
+2. Is the photo quality good enough to see disease symptoms?
+3. Are there non-plant objects (chains, tools, UI elements, text) that obstruct the view?
 
-If you see computer UI, websites, screenshots, text, or non-plant objects → Return:
-{"disease": "No Disease Detected", "confidence": 0, "category": "Invalid", "severity": "None", "symptoms": ["Image does not contain sugarcane plant", "No plant material visible for diagnosis"], "affected_parts": ["None - Invalid Image"], "treatment": "Upload a clear image of sugarcane leaves or stems", "prevention": "Ensure image shows sugarcane plant clearly before uploading", "scientific_name": "Not Applicable"}
+If ANY of these are true, return INVALID:
+- Computer UI, websites, screenshots, text visible
+- Poor image quality (blurry, dark, unclear)
+- Non-plant objects blocking or dominating the image
+- Not sugarcane (other plants, grass, crops)
+- Can't clearly see plant details
 
-If REAL sugarcane present → Diagnose:
-- Check for disease symptoms: discoloration, lesions, spots, rot, wilting, fungal growth
-- Return JSON with: disease name (or "Healthy"), confidence %, symptoms list, affected parts, treatment, prevention, scientific name
+INVALID response:
+{"disease": "No Disease Detected", "confidence": 0, "category": "Invalid", "severity": "None", "symptoms": ["Image quality insufficient for diagnosis", "Please upload clear sugarcane plant photo"], "affected_parts": ["None - Invalid Image"], "treatment": "Upload a clear, close-up image of sugarcane leaves or stems without obstructions", "prevention": "Ensure image shows only sugarcane plant clearly", "scientific_name": "Not Applicable"}
 
-Return ONLY JSON, no explanation."""
+If VALID sugarcane image → Diagnose carefully:
+- Look for disease symptoms: lesions, spots, discoloration, rot, wilting, fungal growth, pest damage
+- Return JSON with: disease name (or "Healthy" if NO symptoms visible), realistic confidence %, specific symptoms, affected parts, treatment, prevention, scientific name
+
+IMPORTANT: Only say "Healthy" if plant looks completely normal with no visible issues. Return ONLY JSON."""
 
         # Send request to Claude
         # Use Claude 3 Haiku - optimized for fast, accurate responses
