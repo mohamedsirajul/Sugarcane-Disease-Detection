@@ -246,14 +246,14 @@ FIRST: Determine if this image contains sugarcane plant material (leaves, stems,
 IF NOT SUGARCANE (e.g., screenshots, other plants, objects, people, etc.):
 Return JSON with:
 {
-    "disease": "Invalid Image",
+    "disease": "No Disease Detected",
     "confidence": 0,
     "category": "Invalid",
     "severity": "None",
-    "symptoms": ["No sugarcane detected in image"],
-    "affected_parts": ["Not Applicable"],
-    "treatment": "Please upload a clear photo of sugarcane leaves or stems to get disease diagnosis. Ensure the image is well-lit and shows the plant clearly.",
-    "prevention": "Not Applicable",
+    "symptoms": ["Image does not contain sugarcane plant", "No plant material visible for diagnosis"],
+    "affected_parts": ["None - Invalid Image"],
+    "treatment": "Upload a clear image of sugarcane leaves or stems",
+    "prevention": "Ensure image shows sugarcane plant clearly before uploading",
     "scientific_name": "Not Applicable"
 }
 
