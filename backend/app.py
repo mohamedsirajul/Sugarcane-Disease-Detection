@@ -246,15 +246,15 @@ FIRST: Determine if this image contains sugarcane plant material (leaves, stems,
 IF NOT SUGARCANE (e.g., screenshots, other plants, objects, people, etc.):
 Return JSON with:
 {
-    "disease": "Not a Sugarcane Image",
+    "disease": "Invalid Image",
     "confidence": 0,
     "category": "Invalid",
     "severity": "None",
-    "symptoms": ["This image does not appear to contain sugarcane plant material"],
-    "affected_parts": ["N/A"],
-    "treatment": "Please upload a clear image of sugarcane leaves or stems",
-    "prevention": "N/A",
-    "scientific_name": "N/A"
+    "symptoms": ["Image does not contain sugarcane plant material", "Please upload a photo of sugarcane leaves or stems", "Ensure the image is clear and well-lit"],
+    "affected_parts": ["Not Applicable"],
+    "treatment": "Upload a valid sugarcane image to get disease diagnosis",
+    "prevention": "Not Applicable",
+    "scientific_name": "Not Applicable"
 }
 
 IF SUGARCANE IS PRESENT:
@@ -272,15 +272,15 @@ Other: Pest damage, Nutritional deficiency, Environmental stress, Healthy
 
 RESPONSE FORMAT (JSON only, no markdown):
 {
-    "disease": "Disease name or 'Healthy' or 'Not a Sugarcane Image'",
+    "disease": "Exact disease name or 'Healthy' or 'Invalid Image'",
     "confidence": 85,
     "category": "Fungal/Bacterial/Viral/Pest/Nutritional/Environmental/None/Invalid",
     "severity": "Very High/High/Medium/Low/None",
-    "symptoms": ["specific observable symptom 1", "specific observable symptom 2", "specific observable symptom 3"],
-    "affected_parts": ["specific plant part 1", "specific plant part 2"],
-    "treatment": "Targeted treatment based on disease identified",
-    "prevention": "Specific prevention measures for this disease",
-    "scientific_name": "Scientific name if known"
+    "symptoms": ["Clear, specific symptom 1 visible in image", "Clear, specific symptom 2 visible in image", "Clear, specific symptom 3 visible in image"],
+    "affected_parts": ["Leaves", "Stems", "Internodes", "Shoots", "Roots", or "Not Applicable"],
+    "treatment": "Specific, actionable treatment recommendation",
+    "prevention": "Specific, actionable prevention measures",
+    "scientific_name": "Scientific pathogen name or 'Not Applicable'"
 }
 
 IMPORTANT: Base diagnosis ONLY on clearly visible symptoms in the image. Be objective and precise. If unsure whether it's sugarcane, err on the side of saying it's not sugarcane."""
