@@ -250,9 +250,9 @@ Return JSON with:
     "confidence": 0,
     "category": "Invalid",
     "severity": "None",
-    "symptoms": ["Image does not contain sugarcane plant material", "Please upload a photo of sugarcane leaves or stems", "Ensure the image is clear and well-lit"],
+    "symptoms": ["No sugarcane detected in image"],
     "affected_parts": ["Not Applicable"],
-    "treatment": "Upload a valid sugarcane image to get disease diagnosis",
+    "treatment": "Please upload a clear photo of sugarcane leaves or stems to get disease diagnosis. Ensure the image is well-lit and shows the plant clearly.",
     "prevention": "Not Applicable",
     "scientific_name": "Not Applicable"
 }
