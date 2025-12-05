@@ -253,12 +253,12 @@ If REAL sugarcane present → Diagnose:
 Return ONLY JSON, no explanation."""
 
         # Send request to Claude
-        # Use Claude 3 Haiku - fast, efficient, and widely available
+        # Use Claude 3 Haiku - optimized for fast, accurate responses
         model_name = "claude-3-haiku-20240307"
 
         message = client.messages.create(
             model=model_name,
-            max_tokens=1024,
+            max_tokens=2048,  # Increased for detailed responses
             temperature=0.0,  # Set to 0 for maximum consistency/determinism
             messages=[
                 {
