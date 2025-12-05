@@ -238,10 +238,17 @@ async def predict_disease(file: UploadFile = File(...)):
         # Initialize Claude client
         client = anthropic.Anthropic(api_key=api_key)
 
-        # Short, strict prompt for accurate detection
-        prompt = """Analyze this image. You MUST first verify it shows a REAL SUGARCANE PLANT (Saccharum officinarum).
+        # Ultra-strict prompt - reject anything that's not real sugarcane
+        prompt = """Look at this image carefully.
 
-CRITICAL: If the image shows ANYTHING other than actual sugarcane plant material (screenshots, UI elements, other plants, text, graphics, objects, people), respond:
+STEP 1 - STRICT VALIDATION (MOST IMPORTANT):
+Does this image show a REAL, LIVING SUGARCANE PLANT in nature/field?
+- Must be actual plant, NOT: screenshots, websites, UI, graphics, text, drawings, diagrams, other crops
+- Must show green/yellow leaves OR jointed stems (like bamboo)
+- Must be outdoor/field photo of actual plant
+
+If NO (if you see websites, UI, text, buttons, graphics, other plants, or anything digital/artificial):
+Return this EXACT JSON:
 {
     "disease": "No Disease Detected",
     "confidence": 0,
@@ -254,12 +261,10 @@ CRITICAL: If the image shows ANYTHING other than actual sugarcane plant material
     "scientific_name": "Not Applicable"
 }
 
-ONLY if you see REAL SUGARCANE (tall grass-like plant with bamboo-like stems and long blade leaves):
-1. Look for disease symptoms: lesions, spots, discoloration, wilting, fungal growth
-2. Identify the disease from: Red Rot, Smut, Rust, Wilt, Leaf Scald, Mosaic Virus, or mark as Healthy
-3. Return JSON with exact disease name, visible symptoms, treatment, and prevention
+STEP 2 - ONLY if confirmed REAL sugarcane plant:
+Diagnose disease and return JSON with disease name, symptoms, treatment.
 
-Return ONLY valid JSON, no extra text."""
+CRITICAL: When in doubt, say it's NOT sugarcane. Return ONLY JSON."""
 
         # Send request to Claude
         # Use Claude 3 Haiku - fast, efficient, and widely available
