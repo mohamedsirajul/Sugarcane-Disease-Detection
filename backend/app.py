@@ -11,6 +11,12 @@ load_dotenv()
 
 app = FastAPI(title="Sugarcane Disease Detection API")
 
+# Configuration from environment variables
+ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-5-20250929")
+CLAUDE_TEMPERATURE = float(os.getenv("CLAUDE_TEMPERATURE", "0.1"))
+CLAUDE_MAX_TOKENS = int(os.getenv("CLAUDE_MAX_TOKENS", "1024"))
+CONFIDENCE_THRESHOLD = int(os.getenv("CONFIDENCE_THRESHOLD", "50"))
+
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
@@ -203,7 +209,14 @@ def read_root():
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "healthy", "api_version": "1.0.0"}
+    return {
+        "status": "healthy",
+        "api_version": "2.0.0",
+        "model": ANTHROPIC_MODEL,
+        "temperature": CLAUDE_TEMPERATURE,
+        "max_tokens": CLAUDE_MAX_TOKENS,
+        "confidence_threshold": CONFIDENCE_THRESHOLD
+    }
 
 
 @app.get("/api/diseases")
@@ -238,38 +251,36 @@ async def predict_disease(file: UploadFile = File(...)):
         # Initialize Claude client
         client = anthropic.Anthropic(api_key=api_key)
 
-        # Strict, quality-focused prompt
-        prompt = """You are a sugarcane disease expert. Analyze this image strictly.
+        # Concise, dynamic prompt for disease detection
+        prompt = """Analyze this image as a sugarcane pathologist.
 
-VALIDATION (Check ALL):
-1. Is this a CLEAR photo of sugarcane plant ONLY (tall grass, blade leaves, bamboo-like stems)?
-2. Is the photo quality good enough to see disease symptoms?
-3. Are there non-plant objects (chains, tools, UI elements, text) that obstruct the view?
+First, validate the image:
+- Must be a clear sugarcane plant photo (not blurry, not other plants, no UI/text overlays)
+- If invalid or unclear, set disease="No Disease Detected", confidence=0, category="Invalid"
 
-If ANY of these are true, return INVALID:
-- Computer UI, websites, screenshots, text visible
-- Poor image quality (blurry, dark, unclear)
-- Non-plant objects blocking or dominating the image
-- Not sugarcane (other plants, grass, crops)
-- Can't clearly see plant details
+If valid, diagnose any diseases present:
+- Examine for lesions, spots, discoloration, rot, wilting, fungal growth, pest damage
+- Only return "Healthy" if absolutely no symptoms are visible
+- Provide realistic confidence percentage based on symptom clarity
 
-INVALID response:
-{"disease": "No Disease Detected", "confidence": 0, "category": "Invalid", "severity": "None", "symptoms": ["Image quality insufficient for diagnosis", "Please upload clear sugarcane plant photo"], "affected_parts": ["None - Invalid Image"], "treatment": "Upload a clear, close-up image of sugarcane leaves or stems without obstructions", "prevention": "Ensure image shows only sugarcane plant clearly", "scientific_name": "Not Applicable"}
+Return ONLY valid JSON with this structure:
+{
+  "disease": "Disease name or Healthy or No Disease Detected",
+  "confidence": 85,
+  "category": "Fungal/Bacterial/Viral/Pest/Nutritional/Environmental/Invalid",
+  "severity": "Very High/High/Medium/Low/None",
+  "symptoms": ["specific observed symptoms"],
+  "affected_parts": ["leaves", "stem", "roots", etc],
+  "treatment": "recommended treatment approach",
+  "prevention": "prevention strategies",
+  "scientific_name": "Scientific name if known, or Not Applicable"
+}"""
 
-If VALID sugarcane image → Diagnose carefully:
-- Look for disease symptoms: lesions, spots, discoloration, rot, wilting, fungal growth, pest damage
-- Return JSON with: disease name (or "Healthy" if NO symptoms visible), realistic confidence %, specific symptoms, affected parts, treatment, prevention, scientific name
-
-IMPORTANT: Only say "Healthy" if plant looks completely normal with no visible issues. Return ONLY JSON."""
-
-        # Send request to Claude
-        # Use Claude 3 Haiku - optimized for fast, accurate responses
-        model_name = "claude-3-haiku-20240307"
-
+        # Use configured model from environment
         message = client.messages.create(
-            model=model_name,
-            max_tokens=2048,  # Increased for detailed responses
-            temperature=0.0,  # Set to 0 for maximum consistency/determinism
+            model=ANTHROPIC_MODEL,
+            max_tokens=CLAUDE_MAX_TOKENS,
+            temperature=CLAUDE_TEMPERATURE,
             messages=[
                 {
                     "role": "user",
@@ -330,8 +341,19 @@ IMPORTANT: Only say "Healthy" if plant looks completely normal with no visible i
                 "detail": str(e)
             }
 
-        # Check if disease exists in our database and enrich with additional info
+        # Check for invalid images or detection failures
         disease_name = prediction.get("disease", "Unknown")
+        confidence = prediction.get("confidence", 0)
+        category = prediction.get("category", "")
+
+        if disease_name == "No Disease Detected" or category == "Invalid" or confidence == 0:
+            return {
+                "success": False,
+                "error": prediction.get("treatment", "Image quality insufficient for diagnosis. Please upload a clear sugarcane plant photo."),
+                "category": "Invalid"
+            }
+
+        # Check if disease exists in our database and enrich with additional info
         if disease_name in DISEASE_DATABASE:
             db_info = DISEASE_DATABASE[disease_name]
             # Optionally merge database info (but keep Claude's analysis primary)
@@ -347,13 +369,13 @@ IMPORTANT: Only say "Healthy" if plant looks completely normal with no visible i
                 "note": "Disease identified but not in reference database"
             }
 
-        # Remove AI branding from response
-        # Keep metadata internal but don't expose to frontend
+        # Add low confidence warning if applicable
+        if confidence < CONFIDENCE_THRESHOLD and disease_name != "Healthy":
+            prediction["warning"] = f"Confidence is {confidence}%. Consider consulting an expert or uploading a clearer image."
 
         return {
             "success": True,
-            "prediction": prediction,
-            "timestamp": None  # Will be set by frontend
+            "prediction": prediction
         }
 
     except anthropic.APIError as e:

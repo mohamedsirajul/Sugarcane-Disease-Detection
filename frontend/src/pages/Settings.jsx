@@ -87,7 +87,7 @@ export default function Settings() {
           </button>
         </div>
 
-        {/* Cache Settings */}
+        {/* Cache Settings
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
             Storage
@@ -99,7 +99,7 @@ export default function Settings() {
             <Trash2 className="w-5 h-5" />
             <span>{t('settings.clearCache')}</span>
           </button>
-        </div>
+        </div> */}
 
         {/* About */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
